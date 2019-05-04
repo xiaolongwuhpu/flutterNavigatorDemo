@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => new MainApp(),
         '/setting': (BuildContext context) => new SettingPage()
       },
-//      home: MainApp(),
     );
   }
 }

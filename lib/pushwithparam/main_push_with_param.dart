@@ -91,7 +91,7 @@ class PushArgumentsScreen extends StatelessWidget {
   }
 }
 
-// A Widget that accepts the necessary arguments via the constructor.
+
 class PushNameArgumentsScreen extends StatelessWidget {
   static const routeName = '/pushNameArguments';
 

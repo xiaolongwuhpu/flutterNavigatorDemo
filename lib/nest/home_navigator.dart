@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:navigator_learning/nest/login.dart';
-import 'package:navigator_learning/nest/setting_page.dart';
 
 
 class HomeNavigator extends StatelessWidget {
