@@ -449,7 +449,7 @@ TypedDictionary arguments = TypedDictionary..set<MyArguments>(MyArguments('strin
 
 有下面的这种场景，我们进入到Screen3页面后，要跳转到Screen4页面，不过点击返回按钮，并不想回退到Screen3页面。也就是想将Screen4的元素插入栈顶的同时，将Screen3的元素夜进行移除。
 
-![1replace_push](/Users/wujing/Desktop/mdimage/1replace_push.png)
+![1replace_push](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/1replace_push.png)
 
 这个时候，我们就要用到pushReplacementNamed()或者popAndPushNamed(),pushReplacement()都可以实现这个目的。
 
@@ -463,7 +463,7 @@ Navigator.of(context).pushReplacement(newRoute);
 
 一般会有这种场景，我们在已经登录的情况下，在设置界面会有个退出用户登录的按钮，点击后会注销用户退出登录，并且会跳转到登录界面。那么路由栈的变化应该会如下图所示：
 
-![2nameAndremove](/Users/wujing/Desktop/mdimage/2nameAndremove.png)
+![2nameAndremove](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/2nameAndremove.png)
 
 
 
@@ -490,7 +490,7 @@ Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route<dynamic> ro
 
 - 如果想在弹出新路由之前，删除路由栈中的部分路由。比如只弹出Screen1路由上面的Screen3和Screen2，然后再push新的Screen4，堆栈的情况如下图：
 
-![3pnaru](/Users/wujing/Desktop/mdimage/3pnaru.png)
+![3pnaru](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/3pnaru.png)
 
 利用ModalRoute.withName(name)，来执行判断，可以看下面的源码，当所传的name跟堆栈中的路由所定义的时候，会返回true值，不匹配的话，则返回false。
 
@@ -511,7 +511,7 @@ Navigator.of(context).pushNamedAndRemoveUntil('/screen4',ModalRoute.withName('/s
 
 popUntil()方法的过程其实跟上面差不多，就是是少了push一个新页面的操作，只是单纯的进行移除路由操作。
 
-![4popuntil](/Users/wujing/Desktop/mdimage/4popuntil.png)
+![4popuntil](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/4popuntil.png)
 
 ```
 popUntil(RoutePredicate predicate);
