@@ -13,7 +13,7 @@ class _NestHomeState extends State<NestHome> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     new HomeNavigator(),
-    new Profile(),
+    new Me(),
   ];
 
   @override
@@ -30,7 +30,7 @@ class _NestHomeState extends State<NestHome> {
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.person),
-            title: new Text('Profile'),
+            title: new Text('Me'),
           ),
         ],
       ),
