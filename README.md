@@ -29,7 +29,8 @@ bool pop(
       ),
     );
   }
-
+  
+每一个Widget都有一个BuildContext。假设有个A Widget，A Widget里肯定会有StatelessWidget.build或者State.build的build方法，build方法创建了 B Widget并返回，A Widget就是B Widget的父Widget，相应的， A Widget的BuildContext也是是B Widget 的BuildContext的父节点。
 ```
 
 ## 2.路由中部分方法   
@@ -75,7 +76,7 @@ PageRouteBuilder({
     this.barrierDismissible = false,//比如AlertDialog也是利用PageRouteBuilder进行创建的，barrierDismissible若为false，点击对话框周围，对话框不会关闭；若为true，点击对话框周围，对话框自动关闭。
     this.barrierColor,
     this.barrierLabel,
-    this.maintainState = true,
+    this.maintainState = true,//默认情况下，当模态路由替换为另一路由时，上一个路由将保留在内存中，要在没有必要时释放所有资源，可以将maintainState设置为false。
   }
 ```
 
@@ -143,7 +144,7 @@ Navigator.of(context).push(new PageRouteBuilder(pageBuilder:
 
 ```
 
-## 嵌套路由
+## 4.嵌套路由
 
 一个 App 中可以有多个导航器，将一个导航器嵌套在另一个导航器下面可以创建一个内部的路由历史。例如：App 主页有底部导航栏，每个对应一个 Navigator，还有与主页处于同一级的全屏页面，如设置页面等。接下来，我们实现这样一个路由结构。
 
@@ -219,7 +220,8 @@ class HomeNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Navigator(
-      initialRoute: 'home',
+      initialRoute: 'home',//初始路由，当用户进入程序时，自动打开对应的路由。传入的是routes的key
+跳转的是对应的Widget
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
         switch (settings.name) {
@@ -302,32 +304,37 @@ void main() => runApp(new MyApp());
 
 
 
-## 4.命名(静态)导航器路由
+## 5.命名(静态)导航器路由
 
 
 
 通常，移动应用管理着大量的路由，并且最容易的是使用名称来引用它们。路由名称通常使用路径结构：“/a/b/c”，主页默认为 “/”。
+
+静态路由在app开发调试阶段可以通过,下边的命令快速启动预注册的界面
+
+```
+flutter run --route=/screen2
+```
+
 创建 MaterialApp 时可以指定 routes 参数，该参数是一个映射路由名称和构造器的 Map。MaterialApp 使用此映射为导航器的 onGenerateRoute 回调参数提供路由。
 
 ```
 class MyApp extends StatelessWidget {
+  GlobalKey<NavigatorState> _navigatorKey=new GlobalKey();
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      home: new HomePage('首页'),
-      
+    
       initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => new Screen1(),
-        '/screen2': (BuildContext context) => new screen2(),
+      routes: {
+        '/': (BuildContext context) => new MainApp(),
+        '/setting': (BuildContext context) => new SettingPage(),
+        '/screen1': (BuildContext context) => new Screen1(),
+        '/screen2' : (BuildContext context) => new Screen2(),
       },
-      或者
-      routes: <String, WidgetBuilder> {
-          '/screen1': (BuildContext context) => new Screen1(),
-          '/screen2' : (BuildContext context) => new Screen2(),
-          '/screen3' : (BuildContext context) => new Screen3(),
-          '/screen4' : (BuildContext context) => new Screen4()
-        },
+//      navigatorKey,   //navigatorKey.currentState相当于Navigator.of(context)
+//      onGenerateRoute,//当通过Navigation.of(context).pushNamed跳转路由时，在routes查找不到时，会调用该方法
+//      onUnknownRoute,//效果跟onGenerateRoute一样调用顺序为onGenerateRoute ==> onUnknownRoute
     );
   }
 }
@@ -344,7 +351,7 @@ class MyApp extends StatelessWidget {
 Navigator.of(context).pushNamed('/screen1');
 ```
 
-**But**使用 Navigator.pushNamed 时无法直接给新页面传参数
+**But**使用 Navigator.pushNamed 时无法直接给新页面传参数,间接传值可以通过
 
 - URL的拼接方式
 
@@ -443,13 +450,13 @@ TypedDictionary arguments = TypedDictionary..set<MyArguments>(MyArguments('strin
 
 
 
-## 5.使用场景
+## 6.使用场景
 
 #### pushReplacementNamed()和popAndPushNamed()
 
 有下面的这种场景，我们进入到Screen3页面后，要跳转到Screen4页面，不过点击返回按钮，并不想回退到Screen3页面。也就是想将Screen4的元素插入栈顶的同时，将Screen3的元素夜进行移除。
 
-![1replace_push](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/1replace_push.png)
+![1replace_push](/Users/wujing/Desktop/mdimage/1replace_push.png)
 
 这个时候，我们就要用到pushReplacementNamed()或者popAndPushNamed(),pushReplacement()都可以实现这个目的。
 
@@ -463,7 +470,7 @@ Navigator.of(context).pushReplacement(newRoute);
 
 一般会有这种场景，我们在已经登录的情况下，在设置界面会有个退出用户登录的按钮，点击后会注销用户退出登录，并且会跳转到登录界面。那么路由栈的变化应该会如下图所示：
 
-![2nameAndremove](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/2nameAndremove.png)
+![2nameAndremove](/Users/wujing/Desktop/mdimage/2nameAndremove.png)
 
 
 
@@ -475,8 +482,7 @@ Navigator.of(context).pushReplacement(newRoute);
 typedef RoutePredicate = bool Function(Route<dynamic> route);
 //第一个参数context是上下文的context，
 //第二个参数newRouteName是新的路由所命名的路径
-//第三个参数predicate，返回值是bool类型，按照我的理解，就是用来判断Until所结
-//束的时机，如果为false的话，就会一直继续执行Remove的操作，直到为true的时候，停止Remove操作，然后才执行push操作。
+//第三个参数predicate，返回值是bool类型，就是用来判断Until所结束的时机，如果为false的话，就会一直继续执行Remove的操作，直到为true的时候，停止Remove操作，然后才执行push操作。
   static Future<T> pushNamedAndRemoveUntil<T extends Object>(BuildContext context, String newRouteName, RoutePredicate predicate) {
     return Navigator.of(context).pushNamedAndRemoveUntil<T>(newRouteName, predicate);
   }
@@ -490,7 +496,7 @@ Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route<dynamic> ro
 
 - 如果想在弹出新路由之前，删除路由栈中的部分路由。比如只弹出Screen1路由上面的Screen3和Screen2，然后再push新的Screen4，堆栈的情况如下图：
 
-![3pnaru](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/3pnaru.png)
+![3pnaru](/Users/wujing/Desktop/mdimage/3pnaru.png)
 
 利用ModalRoute.withName(name)，来执行判断，可以看下面的源码，当所传的name跟堆栈中的路由所定义的时候，会返回true值，不匹配的话，则返回false。
 
@@ -511,7 +517,7 @@ Navigator.of(context).pushNamedAndRemoveUntil('/screen4',ModalRoute.withName('/s
 
 popUntil()方法的过程其实跟上面差不多，就是是少了push一个新页面的操作，只是单纯的进行移除路由操作。
 
-![4popuntil](https://github.com/xiaolongwuhpu/flutterNavigatorDemo/blob/master/mdimage/4popuntil.png)
+![4popuntil](/Users/wujing/Desktop/mdimage/4popuntil.png)
 
 ```
 popUntil(RoutePredicate predicate);
