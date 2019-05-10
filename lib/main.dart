@@ -99,8 +99,18 @@ class MyObserver extends NavigatorObserver{
     //可通过route.settings获取路由相关内容
     //route.currentResult获取返回内容
     //....等等
-    if(route !=null && route?.settings.name!=null)
-    print("push: "+route.settings.name);
+
+    if ((previousRoute is TransitionRoute) && previousRoute.opaque) {
+      //全屏不透明，通常是一个page
+      if(route !=null && route?.settings.name!=null)
+        print("push:不透明的 "+route.settings.name);
+    } else {
+      //全屏透明，通常是一个弹窗
+      if(route !=null && route?.settings.name!=null)
+        print("push:透明的 "+route.settings.name);
+    }
+
+
   }
   @override
   void didPop(Route route, Route previousRoute) {
