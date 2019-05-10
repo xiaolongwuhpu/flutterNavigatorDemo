@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:navigator_learning/nest/nest_home.dart';
-import 'package:navigator_learning/nest/setting_page.dart';
-import 'package:navigator_learning/push_no_param.dart';
-import 'package:navigator_learning/pushwithparam/main_push_with_param.dart';
+import 'nest/nest_home.dart';
+import 'nest/setting_page.dart';
+import 'push_no_param.dart';
+import 'pushname/push_name.dart';
+import 'pushwithparam/main_push_with_param.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  GlobalKey<NavigatorState> _navigatorKey=new GlobalKey();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,6 +17,12 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => new MainApp(),
         '/setting': (BuildContext context) => new SettingPage()
       },
+//      navigatorKey,   //navigatorKey.currentState相当于Navigator.of(context)
+//      onGenerateRoute,//当通过Navigation.of(context).pushNamed跳转路由时，在routes查找不到时，会调用该方法
+//      onUnknownRoute,//效果跟onGenerateRoute一样调用顺序为onGenerateRoute ==> onUnknownRoute
+      navigatorObservers: [
+        MyObserver(),
+      ], //路由观察器，当调用Navigator的相关方法时，会回调相关的操作
     );
   }
 }
@@ -63,9 +70,46 @@ class MainApp extends StatelessWidget {
                 );
               },
             ),
+            MaterialButton(
+              child: Text("路由场景测试",style: _style),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PushName(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
     );
+  }
+}
+
+
+
+//继承NavigatorObserver
+class MyObserver extends NavigatorObserver{
+  @override
+  void didPush(Route route, Route previousRoute) {
+    // 当调用Navigator.push时回调
+    super.didPush(route, previousRoute);
+    //可通过route.settings获取路由相关内容
+    //route.currentResult获取返回内容
+    //....等等
+    if(route !=null && route?.settings.name!=null)
+    print("push: "+route.settings.name);
+  }
+  @override
+  void didPop(Route route, Route previousRoute) {
+    // 当调用Navigator.pop时回调
+    super.didPop(route, previousRoute);
+    //可通过route.settings获取路由相关内容
+    //route.currentResult获取返回内容
+    //....等等
+    if(route?.settings!=null && route?.settings.name!=null)
+    print("pop: "+route?.settings?.name??"");
   }
 }

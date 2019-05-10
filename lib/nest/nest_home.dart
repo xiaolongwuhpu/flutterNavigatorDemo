@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:navigator_learning/nest/home_navigator.dart';
-import 'package:navigator_learning/nest/profile.dart';
+import 'home_navigator.dart';
+import 'profile.dart';
 
 class NestHome extends StatefulWidget {
   @override

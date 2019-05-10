@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:navigator_learning/nest/login.dart';
-
+import 'login.dart';
 
 class HomeNavigator extends StatelessWidget {
   @override

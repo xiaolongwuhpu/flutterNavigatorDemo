@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:navigator_learning/nest/nest_home.dart';
+import 'nest_home.dart';
 void main() => runApp(new MyNestApp());
 
 class MyNestApp extends StatelessWidget {

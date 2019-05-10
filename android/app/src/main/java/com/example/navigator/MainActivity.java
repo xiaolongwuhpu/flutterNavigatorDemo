@@ -1,4 +1,4 @@
-package com.example.navigatorlearning;
+package com.example.navigator;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
