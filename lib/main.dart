@@ -5,13 +5,14 @@ import 'push_no_param.dart';
 import 'pushname/push_name.dart';
 import 'pushwithparam/main_push_with_param.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(Material(child:MyApp()));
 
 class MyApp extends StatelessWidget {
   GlobalKey<NavigatorState> _navigatorKey=new GlobalKey();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: mTheme,
       initialRoute: '/',
       routes: {
         '/': (BuildContext context) => new MainApp(),
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-TextStyle _style = TextStyle(color: Colors.white,fontSize: 18);
+
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,6 @@ class MyObserver extends NavigatorObserver{
     //可通过route.settings获取路由相关内容
     //route.currentResult获取返回内容
     //....等等
-
     if ((previousRoute is TransitionRoute) && previousRoute.opaque) {
       //全屏不透明，通常是一个page
       if(route !=null && route?.settings.name!=null)
@@ -123,3 +123,10 @@ class MyObserver extends NavigatorObserver{
     print("pop: "+route?.settings?.name??"");
   }
 }
+
+final ThemeData mTheme = new ThemeData(
+  primarySwatch: Colors.orange,
+  primaryColor: Colors.blue,
+  primaryColorBrightness: Brightness.light,
+);
+TextStyle _style = TextStyle(color: Colors.deepPurpleAccent,fontSize: 18);
